@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from routers import lancamentos
-from .settings import settings
+from settings import settings
 
 projeto = FastAPI(title="Ferreira Finanças API")
 
