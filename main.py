@@ -10,7 +10,7 @@ def root():
     return "Bem vindo ao Ferreira Finanças!"
 
 
-@app.get("/loca")
+@app.get("/local")
 def root():
     if settings.ENVIRONMENT == "development":
         return "Local atual é development"
