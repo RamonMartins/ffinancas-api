@@ -2,15 +2,15 @@ from fastapi import FastAPI
 from routers import lancamentos
 from settings import settings
 
-projeto = FastAPI(title="Ferreira Finanças API")
+app = FastAPI(title="Ferreira Finanças API")
 
 
-@projeto.get("/")
+@app.get("/")
 def root():
     return "Bem vindo ao Ferreira Finanças!"
 
 
-@projeto.get("/loca")
+@app.get("/loca")
 def root():
     if settings.ENVIRONMENT == "development":
         return "Local atual é development"
@@ -20,4 +20,4 @@ def root():
         return "Nenhum local identificado"
 
 
-projeto.include_router(lancamentos.roteador)
+app.include_router(lancamentos.roteador)
