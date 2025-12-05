@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, func
-from settings import Brasil_TZ
+from settings import Brasil_TZ, settings
 from datetime import datetime
 from .database import Base
 
@@ -19,8 +19,7 @@ class LancamentoModel(Base):
     id = Column(Integer, primary_key=True)
     titulo = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
-    # TODO: Ajustar fuso horário definindo ele diretamente no banco de dados e usar o código abaixo:
-    #created_at = Column(DateTime, default=func.now())
-
-    # lambda garante que a data seja gerada na hora da criação do objeto
-    created_at = Column(DateTime, default=lambda: datetime.now(Brasil_TZ))
+    if settings.ENVIRONMENT == "development":
+        created_at = Column(DateTime, default=lambda: datetime.now(Brasil_TZ))
+    else:
+        created_at = Column(DateTime, default=func.now())
