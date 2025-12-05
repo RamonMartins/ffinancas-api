@@ -1,5 +1,6 @@
 # settings.py
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from zoneinfo import ZoneInfo
 
 class Settings(BaseSettings):
     # O pydantic Settings lida automaticamente com a leitura do .env
@@ -15,3 +16,6 @@ class Settings(BaseSettings):
 
 # Cria a instância que será importada na aplicação principal
 settings = Settings()
+
+# Define o fuso horário do Brasil para uso na aplicação
+Brasil_TZ = ZoneInfo("America/Sao_Paulo")
