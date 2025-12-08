@@ -15,6 +15,7 @@ async def todos_lancamentos(db: Session = Depends(get_db)):
     lancamentos = db.query(LancamentoModel).all()
     return lancamentos
 
+# status_code é necessário para informar o resultado esperado da requisição
 @roteador.post("/create/", response_model=LancamentoCreate, status_code=201)
 async def criar_lancamento(LancamentoSchema: LancamentoCreate, db: Session = Depends(get_db)):
     novo_lancamento = LancamentoModel(
@@ -23,6 +24,8 @@ async def criar_lancamento(LancamentoSchema: LancamentoCreate, db: Session = Dep
     )
     db.add(novo_lancamento)
     db.commit()
+    # Refresh() é usado para atualizar o objeto do "novo_lancamento" com os dados mais recentes do banco de dados, incluindo o ID gerado automaticamente.
+    # Caso nao queira retornar, deve remover essa linha, remover o response_model e ajustar o return.
     db.refresh(novo_lancamento)
     return novo_lancamento
     
