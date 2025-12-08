@@ -1,0 +1,28 @@
+# Excluir ambientes virtuais e caches do contexto de build
+venv/
+.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+ENV/
+.env
+.env.*
+.git
+.gitignore
+.vscode/
+.idea/
+*.log
+
+# Dependências instaladas localmente
+site-packages/
+
+# Outros
+.DS_Store
+
+# Se houver arquivos grandes (ajuste conforme o projeto)
+*.sqlite3
+*.db
