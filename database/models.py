@@ -19,7 +19,8 @@ class LancamentoModel(Base):
     id = Column(Integer, primary_key=True)
     titulo = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
-    if settings.ENVIRONMENT == "development":
+    created_at = Column(DateTime, default=lambda: datetime.now(Brasil_TZ))
+    """if settings.ENVIRONMENT == "development":
         created_at = Column(DateTime, default=lambda: datetime.now(Brasil_TZ))
     else:
-        created_at = Column(DateTime, default=func.now())
+        created_at = Column(DateTime, default=func.now())"""

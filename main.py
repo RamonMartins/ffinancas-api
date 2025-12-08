@@ -14,13 +14,4 @@ def root():
     return "Bem vindo ao Ferreira Finanças!"
 
 
-@app.get("/local")
-def local():
-    if settings.ENVIRONMENT == "development":
-        return {"message": "Local atual é development"}
-    elif settings.ENVIRONMENT == "production":
-        return {"message": "Local atual é production"}
-    else:
-        return {"message": "Nenhum local identificado"}
-
 app.include_router(lancamentos.roteador)
