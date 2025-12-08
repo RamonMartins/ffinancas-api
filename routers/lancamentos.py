@@ -15,6 +15,11 @@ async def todos_lancamentos(db: Session = Depends(get_db)):
     lancamentos = db.query(LancamentoModel).all()
     return lancamentos
 
+
+#--------------------------
+# POST - Criar lançamento
+# Rota: POST "/lancamentos/create/"
+#--------------------------
 # status_code é necessário para informar o resultado esperado da requisição
 @roteador.post("/create/", response_model=LancamentoCreate, status_code=201)
 async def criar_lancamento(LancamentoSchema: LancamentoCreate, db: Session = Depends(get_db)):

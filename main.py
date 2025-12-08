@@ -14,4 +14,5 @@ def root():
     return "Bem vindo ao Ferreira Finanças!"
 
 
+
 app.include_router(lancamentos.roteador)
