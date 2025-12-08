@@ -35,6 +35,31 @@ async def criar_lancamento(LancamentoSchema: LancamentoCreate, db: Session = Dep
     return novo_lancamento
     
 
+@roteador.delete("/destruir_tabela", status_code=status.HTTP_204_NO_CONTENT)
+async def destruir_tabela_lancamentos(db: Session = Depends(get_db)):
+    """
+    Exclui permanentemente a tabela "Lancamentos" do banco de dados (DROP TABLE).
+    """
+    
+    try:
+        # 1. Obtém o objeto Table do modelo
+        tabela = LancamentoModel.__table__ 
+        
+        # 2. Executa a instrução DROP TABLE usando a Engine
+        # O db.bind é a Engine à qual a Session está conectada
+        tabela.drop(db.bind)
+        
+        # 3. Não precisa de db.commit() para DROP TABLE, pois é uma DDL (Data Definition Language)
+        
+        return 
+        
+    except Exception as e:
+        # Se a tabela não existir, um erro pode ser levantado.
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Erro ao excluir tabela. Causa: {e}"
+        )
+
 
 """#--------------------------
 # POST - Criar novo lançamento
