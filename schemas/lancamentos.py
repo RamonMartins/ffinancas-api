@@ -1,5 +1,5 @@
 # Schema
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 
 class LancamentoCreate(BaseModel):
@@ -10,10 +10,10 @@ class LancamentoRead(BaseModel):
     id: int
     titulo: str
     is_active: bool
-    created_at: datetime
+    created_at: datetime = Field(alias="created_at_brasil")
 
     class Config:
-        orm_mode= True
+        from_attributes = True
 
 class LancamentoUpdate(BaseModel):
     titulo: str

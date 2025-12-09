@@ -20,6 +20,10 @@ class LancamentoModel(Base):
     titulo = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
+
+    @property
+    def created_at_brasil(self):
+        return self.created_at.astimezone(Brasil_TZ)
     """if settings.ENVIRONMENT == "development":
         created_at = Column(DateTime, default=lambda: datetime.now(Brasil_TZ))
     else:
