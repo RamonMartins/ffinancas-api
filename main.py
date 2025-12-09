@@ -14,7 +14,6 @@ origins = [
     "http://127.0.0.1:3000",
     "http://ffinancas-web.up.railway.app",
     "https://ffinancas-web.up.railway.app",
-    "https://ffinancas-web.up.railway.app/lancamentos",
 ]
 
 app.add_middleware(
