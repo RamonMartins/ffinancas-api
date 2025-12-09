@@ -8,9 +8,9 @@ roteador = APIRouter(prefix="/lancamentos", tags=["Lançamentos"])
 
 #--------------------------
 # GET - Todos os lançamentos
-# Rota: GET "/lancamentos/"
+# Rota: GET "/lancamentos/listar_todos"
 #--------------------------
-@roteador.get("/", response_model=list[LancamentoRead])
+@roteador.get("/listar_todos", response_model=list[LancamentoRead])
 async def todos_lancamentos(db: Session = Depends(get_db)):
     lancamentos = db.query(LancamentoModel).all()
     return lancamentos

@@ -10,7 +10,7 @@ class LancamentoRead(BaseModel):
     id: int
     titulo: str
     is_active: bool
-    created_at: datetime = Field(alias="created_at_brasil")
+    created_at_utc: datetime = Field(alias="created_at")
 
     class Config:
         from_attributes = True
