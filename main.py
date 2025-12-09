@@ -13,9 +13,6 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://ffinancas-web.up.railway.app",
-    "http://ffinancas-web.up.railway.app",
-    "https://ffinancas-api.railway.internal"
-    "http://ffinancas-api.railway.internal"
 ]
 
 app.add_middleware(
