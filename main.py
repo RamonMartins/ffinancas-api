@@ -12,9 +12,8 @@ app = FastAPI(title="Ferreira Finanças API")
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "ffinancas-web.up.railway.app",
-    "http://ffinancas-web.up.railway.app",
     "https://ffinancas-web.up.railway.app",
+    "http://ffinancas-web.up.railway.app",
 ]
 
 app.add_middleware(
