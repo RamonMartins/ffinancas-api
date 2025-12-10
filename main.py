@@ -9,10 +9,15 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Ferreira Finanças API")
 
+if settings.ENVIRONMENT == "production":
+    FRONT_URL_CORS = f"https://{settings.FRONT_URL}"
+else:
+    FRONT_URL_CORS = "http://localhost:3000"
+
 origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    FRONT_URL_CORS,
     #"https://ffinancas-web.up.railway.app",
+
 ]
 
 app.add_middleware(

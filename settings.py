@@ -14,6 +14,8 @@ class SettingsClass(BaseSettings):
     # Define de onde carregar as variáveis (padrão do pydantic)
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
+    FRONT_URL: str = "http://localhost:3000"
+
 # Cria a instância que será importada na aplicação principal
 settings = SettingsClass()
 
