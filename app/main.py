@@ -1,13 +1,18 @@
+# app/main.py
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database.database import engine
-from database import models
-from routers import lancamentos
-from settings import settings
+from app.database.database import engine
+from app.database import models
+from app.routers import lancamentos
+from app.core.config import settings
+from fastapi.responses import ORJSONResponse
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Ferreira Finanças API")
+# Inicia a instância da API com title e ORJSON
+app = FastAPI(title="Ferreira Finanças API", default_response_class=ORJSONResponse)
+#app = FastAPI(title="Ferreira Finanças API")
 
 """Configuração do CORS
 if settings.ENVIRONMENT == "production":
@@ -33,7 +38,6 @@ app.add_middleware(
 @app.get("/")
 def root():
     return "Bem vindo ao Ferreira Finanças!"
-
 
 
 app.include_router(lancamentos.roteador)

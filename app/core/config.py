@@ -1,4 +1,4 @@
-# settings.py
+# app/core/config.py
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from zoneinfo import ZoneInfo
 
@@ -11,10 +11,10 @@ class SettingsClass(BaseSettings):
     # 2. Exemplo de Variável de Conexão com DB
     DATABASE_URL: str = "sqlite:///./prod.db"
 
+    FRONT_URL: str = "http://localhost:3000"
+
     # Define de onde carregar as variáveis (padrão do pydantic)
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
-
-    FRONT_URL: str = "http://localhost:3000"
 
 # Cria a instância que será importada na aplicação principal
 settings = SettingsClass()

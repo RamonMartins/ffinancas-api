@@ -1,8 +1,10 @@
+# app/routers/lancamentos.py
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from database.database import get_db
-from database.models import *
+from app.database.database import get_db
+from app.database.models import *
 from sqlalchemy.orm import Session
-from schemas.lancamentos import *
+from app.schemas.lancamentos import *
 
 roteador = APIRouter(prefix="/lancamentos", tags=["Lançamentos"])
 

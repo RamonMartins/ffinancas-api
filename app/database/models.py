@@ -1,5 +1,7 @@
+# app/database/models.py
+
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
-from settings import Brasil_TZ, settings
+from app.core.config import Brasil_TZ, settings
 from datetime import datetime
 from .database import Base
 
