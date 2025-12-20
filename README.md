@@ -8,11 +8,11 @@
 ## Custom Start Command
 - Custom start command com correção de CORS:
 
-    ``uvicorn app.main:app --host 0.0.0.0 --port $PORT --forwarded-allow-ips '*'``
+    ``uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --forwarded-allow-ips '*'``
 
 - Sem correção:
 
-    ``uvicorn app.main:app --host 0.0.0.0 --port $PORT``
+    ``uvicorn app.main:app --host 0.0.0.0 --port ${PORT}``
 
 ## Alembic
 - Criar as migrações no Alembic:
