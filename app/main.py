@@ -11,6 +11,7 @@ from fastapi.responses import ORJSONResponse
 app = FastAPI(title="Ferreira Finanças API", default_response_class=ORJSONResponse)
 #app = FastAPI(title="Ferreira Finanças API")
 
+"""
 #Configuração do CORS
 if settings.ENVIRONMENT == "production":
     FRONT_URL_CORS = f"https://{settings.FRONT_URL}"
@@ -30,7 +31,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+"""
 
 @app.get("/")
 def root():
