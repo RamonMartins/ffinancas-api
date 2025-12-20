@@ -23,7 +23,6 @@ origins = [
 
 ]
 
-print('RAMON', origins)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
