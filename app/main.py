@@ -3,12 +3,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.database import engine
-from app.database import models
-from app.routers import lancamentos
+from app.routers import lancamentos, carteiras
 from app.core.config import settings
 from fastapi.responses import ORJSONResponse
-
-models.Base.metadata.create_all(bind=engine)
 
 # Inicia a instância da API com title e ORJSON
 app = FastAPI(title="Ferreira Finanças API", default_response_class=ORJSONResponse)
@@ -41,3 +38,4 @@ def root():
 
 
 app.include_router(lancamentos.roteador)
+app.include_router(carteiras.roteador)

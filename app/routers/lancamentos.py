@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.database.database import get_db
-from app.database.models import *
+from app.database.models import LancamentoModel
 from sqlalchemy.orm import Session
 from app.schemas.lancamentos import *
 
@@ -10,9 +10,9 @@ roteador = APIRouter(prefix="/lancamentos", tags=["Lançamentos"])
 
 #--------------------------
 # GET - Todos os lançamentos
-# Rota: GET "/lancamentos/listar_todos"
+# Rota: GET "/lancamentos/list_all"
 #--------------------------
-@roteador.get("/listar_todos", response_model=list[LancamentoRead])
+@roteador.get("/list_all", response_model=list[LancamentoRead])
 async def todos_lancamentos(db: Session = Depends(get_db)):
     lancamentos = db.query(LancamentoModel).all()
     return lancamentos
@@ -23,7 +23,7 @@ async def todos_lancamentos(db: Session = Depends(get_db)):
 # Rota: POST "/lancamentos/create/"
 #--------------------------
 # status_code é necessário para informar o resultado esperado da requisição
-@roteador.post("/create/", response_model=LancamentoCreate, status_code=201)
+@roteador.post("/create", response_model=LancamentoCreate, status_code=201)
 async def criar_lancamento(LancamentoSchema: LancamentoCreate, db: Session = Depends(get_db)):
     novo_lancamento = LancamentoModel(
         titulo= LancamentoSchema.titulo,
@@ -36,31 +36,6 @@ async def criar_lancamento(LancamentoSchema: LancamentoCreate, db: Session = Dep
     db.refresh(novo_lancamento)
     return novo_lancamento
     
-
-@roteador.delete("/destruir_tabela", status_code=status.HTTP_204_NO_CONTENT)
-async def destruir_tabela_lancamentos(db: Session = Depends(get_db)):
-    """
-    Exclui permanentemente a tabela "Lancamentos" do banco de dados (DROP TABLE).
-    """
-    
-    try:
-        # 1. Obtém o objeto Table do modelo
-        tabela = LancamentoModel.__table__ 
-        
-        # 2. Executa a instrução DROP TABLE usando a Engine
-        # O db.bind é a Engine à qual a Session está conectada
-        tabela.drop(db.bind)
-        
-        # 3. Não precisa de db.commit() para DROP TABLE, pois é uma DDL (Data Definition Language)
-        
-        return 
-        
-    except Exception as e:
-        # Se a tabela não existir, um erro pode ser levantado.
-        raise HTTPException(
-            status_code=400, 
-            detail=f"Erro ao excluir tabela. Causa: {e}"
-        )
 
 
 """#--------------------------
