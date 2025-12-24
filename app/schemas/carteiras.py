@@ -14,5 +14,6 @@ class CarteiraRead(BaseModel):
     titulo: str
     saldo: float | None = 0.0
     created_at_utc: datetime = Field(alias="created_at")
+    teste_data: datetime
 
     model_config = ConfigDict(from_attributes=True)

@@ -27,8 +27,8 @@ class CarteiraModel(Base):
     titulo: Mapped[str] = mapped_column(nullable=False)
     # Usar o operador '| None' é melhor do que usar 'Optional[str]' pois não precisa importar dependência.
     saldo: Mapped[float | None] = mapped_column(default=0.0)
-    #created_at_utc = Column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
     created_at_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
+    teste_data: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     @property
     def created_at(self):
