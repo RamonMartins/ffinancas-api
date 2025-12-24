@@ -11,7 +11,7 @@ class SettingsClass(BaseSettings):
     # 2. Exemplo de Variável de Conexão com DB
     DATABASE_URL: str
 
-    FRONT_URL: str
+    #FRONT_URL: str
 
     # Define de onde carregar as variáveis (padrão do pydantic)
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
