@@ -6,12 +6,12 @@ class SettingsClass(BaseSettings):
     # O pydantic Settings lida automaticamente com a leitura do .env
 
     # 1. Variável de Ambiente: Padrão é 'development' se a variável não estiver definida
-    ENVIRONMENT: str = "development" 
+    ENVIRONMENT: str
     
     # 2. Exemplo de Variável de Conexão com DB
-    DATABASE_URL: str = "sqlite:///./prod.db"
+    DATABASE_URL: str
 
-    FRONT_URL: str = "http://localhost:3000"
+    FRONT_URL: str
 
     # Define de onde carregar as variáveis (padrão do pydantic)
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
