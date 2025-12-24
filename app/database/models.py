@@ -8,14 +8,14 @@ from datetime import datetime
 from .database import Base
 
 """
+> Type Hints
+
 Mapped[int]                 INTEGER             Números inteiros.
 Mapped[str]                 VARCHAR ou TEXT     Textos e strings.
 Mapped[float]	            FLOAT               Números decimais.
 Mapped[bool]	            BOOLEAN             Verdadeiro ou Falso.
 Mapped[bytes]	            BLOB ou BYTEA       Arquivos, imagens ou dados binários.
-Mapped[datetime.datetime]   
-Mapped[datetime.date]
-Mapped[datetime.time]
+Mapped[datetime]   
 
 Mapped[Optional[str]]               Campo opcional/Não obrigatório
 """
@@ -25,8 +25,10 @@ class CarteiraModel(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default= uuid.uuid4)
     titulo: Mapped[str] = mapped_column(nullable=False)
+    # Usar o operador '| None' é melhor do que usar 'Optional[str]' pois não precisa importar dependência.
     saldo: Mapped[float | None] = mapped_column(default=0.0)
-    created_at_utc = Column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
+    #created_at_utc = Column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
+    created_at_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
 
     @property
     def created_at(self):
@@ -40,7 +42,7 @@ class UsuarioModel(Base):
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     senha: Mapped[str] = mapped_column(nullable=False)
     nome: Mapped[str] = mapped_column(nullable=False)
-    created_at_utc = Column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
+    created_at_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
 
     @property
     def created_at(self):
@@ -51,9 +53,9 @@ class LancamentoModel(Base):
     __tablename__ = "Lancamentos"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default= uuid.uuid4)
-    titulo = Column(String, nullable=False)
-    is_active = Column(Boolean, default=True)
-    created_at_utc = Column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
+    titulo: Mapped[str] = mapped_column(nullable=False)
+    is_active: Mapped[bool] = mapped_column(nullable=False)
+    created_at_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
 
     @property
     def created_at(self):
