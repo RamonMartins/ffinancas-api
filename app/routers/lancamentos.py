@@ -14,7 +14,7 @@ roteador = APIRouter(prefix="/lancamentos", tags=["Lançamentos"])
 # Rota: GET "/lancamentos/list_all"
 #--------------------------
 @roteador.get("/list_all", response_model=list[LancamentoRead])
-async def todos_lancamentos(db: Session = Depends(get_db)):
+def todos_lancamentos(db: Session = Depends(get_db)):
     lancamentos = db.query(LancamentoModel).all()
     return lancamentos
 
@@ -24,8 +24,8 @@ async def todos_lancamentos(db: Session = Depends(get_db)):
 # Rota: POST "/lancamentos/create/"
 #--------------------------
 # status_code é necessário para informar o resultado esperado da requisição
-@roteador.post("/create", response_model=LancamentoCreate, status_code=201)
-async def criar_lancamento(payload: LancamentoCreate, db: Session = Depends(get_db)):
+@roteador.post("/create", response_model=LancamentoRead, status_code=201)
+def criar_lancamento(payload: LancamentoCreate, db: Session = Depends(get_db)):
 
     # Verifica se tem duplicidade no banco de dados
     verificar_duplicidade(

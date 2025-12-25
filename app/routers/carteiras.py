@@ -14,7 +14,7 @@ roteador = APIRouter(prefix="/carteiras", tags=["Carteiras"])
 # Rota: GET "/carteiras/list_all"
 #--------------------------
 @roteador.get("/list_all", response_model=list[CarteiraRead])
-async def todas_carteiras(db: Session = Depends(get_db)):
+def todas_carteiras(db: Session = Depends(get_db)):
     carteiras = db.query(CarteiraModel).all()
     return carteiras
 
@@ -24,8 +24,8 @@ async def todas_carteiras(db: Session = Depends(get_db)):
 # Rota: POST "/carteiras/create/"
 #--------------------------
 # status_code é necessário para informar o resultado esperado da requisição
-@roteador.post("/create", response_model=CarteiraCreate, status_code=201)
-async def criar_carteira(payload: CarteiraCreate, db: Session = Depends(get_db)):
+@roteador.post("/create", response_model=CarteiraRead, status_code=201)
+def criar_carteira(payload: CarteiraCreate, db: Session = Depends(get_db)):
     
     # Verifica se tem duplicidade no banco de dados
     verificar_duplicidade(
