@@ -18,7 +18,7 @@ class CarteiraRead(BaseModel):
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
-    @field_serializer("teste_data")
+    @field_serializer("created_at")
     def serializar_data(self, dt: datetime):
         # Converte de UTC para Brasil
         dt_brasil = dt.astimezone(Brasil_TZ)
