@@ -28,6 +28,7 @@ class CarteiraModel(Base):
     # Usar o operador '| None' é melhor do que usar 'Optional[str]' pois não precisa importar dependência.
     saldo: Mapped[float | None] = mapped_column(default=0.0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
 class UsuarioModel(Base):

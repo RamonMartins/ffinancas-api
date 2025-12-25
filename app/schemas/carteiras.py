@@ -26,3 +26,7 @@ class CarteiraRead(BaseModel):
         return dt_brasil.isoformat()
         # Opcional: Se preferir formato brasileiro "24/12/2025 20:30:00", use:
         # return dt_brazil.strftime("%d/%m/%Y %H:%M:%S")
+
+class CarteiraUpdate(BaseModel):
+    titulo: Annotated[str | None, StringConstraints(strip_whitespace=True, min_length=1)] = None
+    saldo: float | None = 0.0
