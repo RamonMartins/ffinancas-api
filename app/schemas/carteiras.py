@@ -15,10 +15,11 @@ class CarteiraRead(BaseModel):
     titulo: str
     saldo: float | None = 0.0
     created_at: datetime
+    modified_at: datetime
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
-    @field_serializer("created_at")
+    @field_serializer("created_at", "modified_at")
     def serializar_data(self, dt: datetime):
         # Converte de UTC para Brasil
         dt_brasil = dt.astimezone(Brasil_TZ)
