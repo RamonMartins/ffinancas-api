@@ -12,9 +12,9 @@ roteador = APIRouter(prefix="/carteiras", tags=["Carteiras"])
 
 #--------------------------
 # GET - Todas as Carteiras
-# Rota: GET "/carteiras/list_all"
+# Rota: GET "/carteiras"
 #--------------------------
-@roteador.get("/list_all", response_model=list[CarteiraRead])
+@roteador.get("", response_model=list[CarteiraRead])
 def todas_carteiras(db: Session = Depends(get_db)):
     carteiras = db.query(CarteiraModel).all()
     return carteiras
@@ -22,10 +22,10 @@ def todas_carteiras(db: Session = Depends(get_db)):
 
 #--------------------------
 # POST - Criar Carteira
-# Rota: POST "/carteiras/create/"
+# Rota: POST "/carteiras"
 #--------------------------
 # status_code é necessário para informar o resultado esperado da requisição
-@roteador.post("/create", response_model=CarteiraRead, status_code=201)
+@roteador.post("", response_model=CarteiraRead, status_code=201)
 def criar_carteira(payload: CarteiraCreate, db: Session = Depends(get_db)):
     
     # Verifica se tem duplicidade no banco de dados
@@ -51,7 +51,7 @@ def criar_carteira(payload: CarteiraCreate, db: Session = Depends(get_db)):
 # PATCH - Atualizar Carteira
 # Rota: PATCH "/carteiras/edit/[id]"
 #--------------------------
-@roteador.patch("/edit/{carteira_id}", response_model=CarteiraRead)
+@roteador.patch("/{carteira_id}", response_model=CarteiraRead)
 def atualizar_carteira(carteira_id: UUID, payload: CarteiraUpdate, db: Session = Depends(get_db)):
     # Busca o objeto no Banco pesquisando pelo id passado
     obj_alvo = db.get(CarteiraModel, carteira_id)
