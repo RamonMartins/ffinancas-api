@@ -21,9 +21,9 @@ Mapped[Optional[str]]               Campo opcional/Não obrigatório
 """
 
 class CarteiraModel(Base):
-    __tablename__ = "Carteiras"
+    __tablename__ = "carteiras"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default= uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     titulo: Mapped[str] = mapped_column(nullable=False)
     # Usar o operador '| None' é melhor do que usar 'Optional[str]' pois não precisa importar dependência.
     saldo: Mapped[float | None] = mapped_column(default=0.0)
@@ -32,9 +32,9 @@ class CarteiraModel(Base):
 
 
 class UsuarioModel(Base):
-    __tablename__ = "Usuarios"
+    __tablename__ = "usuarios"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default= uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     senha: Mapped[str] = mapped_column(nullable=False)
     nome: Mapped[str] = mapped_column(nullable=False)
@@ -46,9 +46,9 @@ class UsuarioModel(Base):
 
 
 class LancamentoModel(Base):
-    __tablename__ = "Lancamentos"
+    __tablename__ = "lancamentos"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default= uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     titulo: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(nullable=False)
     created_at_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(Brasil_TZ))
