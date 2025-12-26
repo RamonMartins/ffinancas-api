@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.database import engine
-from app.routers import lancamentos, carteiras
+from app.routers import lancamentos, carteiras, grupos_familiares
 from app.core.config import settings
 from fastapi.responses import ORJSONResponse
 
@@ -40,3 +40,4 @@ def root():
 
 app.include_router(lancamentos.roteador)
 app.include_router(carteiras.roteador)
+app.include_router(grupos_familiares.roteador)
