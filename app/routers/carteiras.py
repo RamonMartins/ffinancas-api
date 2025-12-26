@@ -49,10 +49,10 @@ def criar_carteira(payload: CarteiraCreate, db: Session = Depends(get_db)):
 
 #--------------------------
 # PATCH - Atualizar Carteira
-# Rota: PATCH "/carteiras/edit/[id]"
+# Rota: PATCH "/carteiras/[id]"
 #--------------------------
 @roteador.patch("/{carteira_id}", response_model=CarteiraRead)
-def atualizar_carteira(carteira_id: UUID, payload: CarteiraUpdate, db: Session = Depends(get_db)):
+def editar_carteira(carteira_id: UUID, payload: CarteiraUpdate, db: Session = Depends(get_db)):
     # Busca o objeto no Banco pesquisando pelo id passado
     obj_alvo = db.get(CarteiraModel, carteira_id)
 
