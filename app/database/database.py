@@ -36,8 +36,8 @@ Base = declarative_base()
 # 5. Função de Retentativa (A "Capa" de inteligência)
 # Se o banco estiver suspendido (Cold Start), esta lógica impede que a API falhe de imediato.
 @retry(
-    stop=stop_after_attempt(5),      # Limita a no máximo 5 tentativas
-    wait=wait_fixed(3),              # Espera exatamente 3 segundos entre cada tentativa
+    stop=stop_after_attempt(8),      # Limita a no máximo 5 tentativas
+    wait=wait_fixed(2),              # Espera exatamente 3 segundos entre cada tentativa
     retry=retry_if_exception_type(OperationalError), # Só tenta de novo se for erro de conexão/rede
     reraise=True                     # Se esgotar as 5 tentativas, lança o erro final
 )
