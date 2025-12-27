@@ -7,6 +7,7 @@ from datetime import datetime
 from app.database.base import Base
 from typing import TYPE_CHECKING
 
+# TYPE_CHECKING apenas para remover erro de chamada do model de outro arquivo
 if TYPE_CHECKING:
     from .grupos_familiares import GrupoFamiliarModel
 

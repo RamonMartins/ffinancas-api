@@ -2,8 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database.session import engine
-from app.routers import lancamentos, carteiras, grupos_familiares
+from app.routers import rotas_projeto
 from app.core.config import settings
 from fastapi.responses import ORJSONResponse
 
@@ -38,6 +37,4 @@ def root():
     return "Bem vindo ao Ferreira Finanças!"
 
 
-app.include_router(lancamentos.roteador)
-app.include_router(carteiras.roteador)
-app.include_router(grupos_familiares.roteador)
+app.include_router(rotas_projeto)
