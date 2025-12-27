@@ -3,7 +3,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from app.database.database import get_db
 from app.database.models import CarteiraModel
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.schemas.carteiras import *
 from app.utils.text_validator import verificar_duplicidade
 
@@ -16,7 +16,12 @@ roteador = APIRouter(prefix="/carteiras", tags=["Carteiras"])
 #--------------------------
 @roteador.get("", response_model=list[CarteiraRead])
 def todas_carteiras(db: Session = Depends(get_db)):
+
+    # Retorna as carteiras apenas
     carteiras = db.query(CarteiraModel).all()
+
+    # Retorna as carteiras com o seu respectivo objeto Grupo Familiar
+    #carteiras = db.query(CarteiraModel).options(joinedload(CarteiraModel.grupo_familiar)).all()
     return carteiras
 
 

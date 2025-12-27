@@ -5,15 +5,20 @@ from pydantic import BaseModel, ConfigDict, StringConstraints, Field, field_seri
 from datetime import datetime
 from typing import Annotated
 from app.core.config import Brasil_TZ
+from app.schemas.grupos_familiares import GrupoFamiliarRead
 
 class CarteiraCreate(BaseModel):
     titulo: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
     saldo: float | None = 0.0
+    grupo_familiar_id: UUID
 
 class CarteiraRead(BaseModel):
     id: UUID
     titulo: str
     saldo: float | None = 0.0
+    grupo_familiar_id: UUID
+    # Para listar o objeto Grupo Familiar
+    #grupo_familiar: GrupoFamiliarRead
     created_at: datetime
     modified_at: datetime
 
