@@ -1,7 +1,7 @@
 # app/routers/carteiras.py
 
 from fastapi import APIRouter, HTTPException, status, Depends
-from app.database.database import get_db
+from app.database.session import get_db
 from app.database.models import CarteiraModel
 from sqlalchemy.orm import Session, joinedload
 from app.schemas.carteiras import *

@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey, DateTime, UUID, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.config import Brasil_TZ, settings
 from datetime import datetime
-from .database import Base
+from app.database.base import Base
 
 """
 > Type Hints

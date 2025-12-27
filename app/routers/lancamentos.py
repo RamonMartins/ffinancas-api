@@ -1,7 +1,7 @@
 # app/routers/lancamentos.py
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.database.database import get_db
+from app.database.session import get_db
 from app.database.models import LancamentoModel
 from sqlalchemy.orm import Session
 from app.schemas.lancamentos import *

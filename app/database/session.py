@@ -1,9 +1,9 @@
-# app/database/database.py
+# app/database/session.py
 
 from app.core.config import settings
 from sqlalchemy import create_engine, text
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from app.database.base import Base
 from sqlalchemy.exc import OperationalError
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 
@@ -30,10 +30,7 @@ else:
 # Cada instância de SessionLocal será uma sessão de banco de dados.
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# 4. Base é a classe base para criar os modelos de banco de dados (tabelas).
-Base = declarative_base()
-
-# 5. Função de Retentativa (A "Capa" de inteligência)
+# 4. Função de Retentativa (A "Capa" de inteligência)
 # Se o banco estiver suspendido (Cold Start), esta lógica impede que a API falhe de imediato.
 @retry(
     stop=stop_after_attempt(8),      # Limita a no máximo 5 tentativas
@@ -54,7 +51,7 @@ def get_db_session_with_retry():
         db.close()
         raise e
 
-# 6. Função que será usada como uma 'Dependência' no FastAPI
+# 5. Função que será usada como uma 'Dependência' no FastAPI
 def get_db():
     # Função injetada nos endpoints via Depends(get_db).
     # Garante que a sessão seja aberta com retry e fechada ao final da requisição.

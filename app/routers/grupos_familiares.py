@@ -1,7 +1,7 @@
 # app/routers/grupos_familiares.py
 
 from fastapi import APIRouter, HTTPException, status, Depends
-from app.database.database import get_db
+from app.database.session import get_db
 from app.database.models import GrupoFamiliarModel
 from sqlalchemy.orm import Session
 from app.schemas.grupos_familiares import *

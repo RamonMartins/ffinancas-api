@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database.database import engine
+from app.database.session import engine
 from app.routers import lancamentos, carteiras, grupos_familiares
 from app.core.config import settings
 from fastapi.responses import ORJSONResponse
