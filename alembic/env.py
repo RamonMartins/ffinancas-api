@@ -72,6 +72,10 @@ async def run_async_migrations() -> None:
 
     if DB_URL.startswith("postgresql://"):
         DB_URL = DB_URL.replace("postgresql://", "postgresql+asyncpg://")
+    
+    if "ssl=" not in DB_URL:
+        separator = "&" if "?" in DB_URL else "?"
+        DB_URL = f"{DB_URL}{separator}ssl=require"
 
     configuration["sqlalchemy.url"] = DB_URL
 
