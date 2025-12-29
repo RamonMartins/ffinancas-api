@@ -3,9 +3,11 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from app.database.session import get_db
 from app.database.models import CarteiraModel
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from app.schemas.carteiras import *
 from app.utils.text_validator import verificar_duplicidade
+from sqlalchemy import select
 
 
 roteador = APIRouter(prefix="/carteiras", tags=["Carteiras"])
@@ -15,14 +17,12 @@ roteador = APIRouter(prefix="/carteiras", tags=["Carteiras"])
 # Rota: GET "/carteiras"
 #--------------------------
 @roteador.get("", response_model=list[CarteiraRead])
-def todas_carteiras(db: Session = Depends(get_db)):
-
-    # Retorna as carteiras apenas
-    carteiras = db.query(CarteiraModel).all()
-
-    # Retorna as carteiras com o seu respectivo objeto Grupo Familiar
-    #carteiras = db.query(CarteiraModel).options(joinedload(CarteiraModel.grupo_familiar)).all()
-    return carteiras
+async def todas_carteiras(db: AsyncSession = Depends(get_db)):
+    
+    # Escreve a consulta(execute()), envia ao banco e aguarda a resposta(await).
+    carteiras = await db.execute(select(CarteiraModel))
+    # Faz a extração do resultado para objetos, como é lista usa scalars no plural.
+    return carteiras.scalars().all()
 
 
 #--------------------------
@@ -31,10 +31,10 @@ def todas_carteiras(db: Session = Depends(get_db)):
 #--------------------------
 # status_code é necessário para informar o resultado esperado da requisição
 @roteador.post("", response_model=CarteiraRead, status_code=201)
-def criar_carteira(payload: CarteiraCreate, db: Session = Depends(get_db)):
+async def criar_carteira(payload: CarteiraCreate, db: AsyncSession = Depends(get_db)):
     
     # Verifica se tem duplicidade no banco de dados
-    verificar_duplicidade(
+    await verificar_duplicidade(
         db,
         model=CarteiraModel,
         campo="titulo",
@@ -46,10 +46,10 @@ def criar_carteira(payload: CarteiraCreate, db: Session = Depends(get_db)):
     # Os asteriscos (**) serve para entregar ao constructor CarteiraModel as propriedades uma a uma
     nova_carteira = CarteiraModel(**payload.model_dump())
     db.add(nova_carteira)
-    db.commit()
+    await db.commit()
     # Refresh() é usado para atualizar o objeto do "novo_lancamento" com os dados mais recentes do banco de dados, incluindo o ID gerado automaticamente.
     # Caso nao queira retornar, deve remover essa linha, remover o response_model e ajustar o return.
-    db.refresh(nova_carteira)
+    await db.refresh(nova_carteira)
     return nova_carteira
 
 #--------------------------
@@ -57,9 +57,9 @@ def criar_carteira(payload: CarteiraCreate, db: Session = Depends(get_db)):
 # Rota: PATCH "/carteiras/[id]"
 #--------------------------
 @roteador.patch("/{carteira_id}", response_model=CarteiraRead)
-def editar_carteira(carteira_id: UUID, payload: CarteiraUpdate, db: Session = Depends(get_db)):
+async def editar_carteira(carteira_id: UUID, payload: CarteiraUpdate, db: AsyncSession = Depends(get_db)):
     # Busca o objeto no Banco pesquisando pelo id passado
-    obj_alvo = db.get(CarteiraModel, carteira_id)
+    obj_alvo = await db.get(CarteiraModel, carteira_id)
 
     # Trata o erro caso não encontre o objeto
     if not obj_alvo:
@@ -75,6 +75,6 @@ def editar_carteira(carteira_id: UUID, payload: CarteiraUpdate, db: Session = De
         setattr(obj_alvo, campo, valor)
     
     db.add(obj_alvo)
-    db.commit()
-    db.refresh(obj_alvo)
+    await db.commit()
+    await db.refresh(obj_alvo)
     return obj_alvo
