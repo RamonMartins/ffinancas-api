@@ -46,7 +46,7 @@ def criar_grupo(payload: GrupoFamiliarCreate, db: Session = Depends(get_db)):
 #--------------------------
 # PATCH - Atualizar Grupo Familiar
 # Rota: PATCH "/grupos-familiares/[id]"
-#--------------------------
+#-------------------------- 
 @roteador.patch("/{grupo_id}", response_model=GrupoFamiliarRead)
 def editar_grupo(grupo_id: UUID, payload: GrupoFamiliarUpdate, db: Session = Depends(get_db)):
     

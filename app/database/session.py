@@ -3,7 +3,6 @@
 from app.core.config import settings
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-from app.database.base import Base
 from sqlalchemy.exc import OperationalError
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 

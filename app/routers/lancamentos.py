@@ -7,24 +7,26 @@ from sqlalchemy.orm import Session
 from app.schemas.lancamentos import *
 from app.utils.text_validator import verificar_duplicidade
 
+
 roteador = APIRouter(prefix="/lancamentos", tags=["Lançamentos"])
 
 #--------------------------
 # GET - Todos os lançamentos
-# Rota: GET "/lancamentos/list_all"
+# Rota: GET "/lancamentos"
 #--------------------------
-@roteador.get("/list_all", response_model=list[LancamentoRead])
+@roteador.get("", response_model=list[LancamentoRead])
 def todos_lancamentos(db: Session = Depends(get_db)):
+
     lancamentos = db.query(LancamentoModel).all()
     return lancamentos
 
 
 #--------------------------
 # POST - Criar lançamento
-# Rota: POST "/lancamentos/create/"
+# Rota: POST "/lancamentos"
 #--------------------------
 # status_code é necessário para informar o resultado esperado da requisição
-@roteador.post("/create", response_model=LancamentoRead, status_code=201)
+@roteador.post("", response_model=LancamentoRead, status_code=201)
 def criar_lancamento(payload: LancamentoCreate, db: Session = Depends(get_db)):
 
     # Verifica se tem duplicidade no banco de dados
@@ -47,64 +49,24 @@ def criar_lancamento(payload: LancamentoCreate, db: Session = Depends(get_db)):
     return novo_lancamento
     
 
-
-"""#--------------------------
-# POST - Criar novo lançamento
-# Rota: POST "/lancamentos/"
 #--------------------------
-@roteador.post("/", response_model=LancamentoRead, status_code=201)
-async def criar_lancamento(lancamento: LancamentoCreate, db: Session = Depends(get_db)):
-    novo_lancamento = Lancamento(
-        titulo=lancamento.titulo,
-        is_active=lancamento.is_active
-    )
-    db.add(novo_lancamento)
-    db.commit()
-    db.refresh(novo_lancamento)
-    return novo_lancamento
-
-
+# PATCH - Atualizar Lançamento
+# Rota: PATCH "/lancamentos/[id]"
 #--------------------------
-# GET - Buscar lançamento por ID
-# Rota: GET "/lancamentos/{id}"
-#--------------------------
-@roteador.get("/{id}", response_model=LancamentoRead)
-async def obter_lancamento(id: int, db: Session = Depends(get_db)):
-    lancamento = db.query(Lancamento).filter(Lancamento.id == id).first()
-    if not lancamento:
-        raise HTTPException(status_code=404, detail="Lançamento não encontrado")
-    return lancamento
+@roteador.patch("/{lancamento_id}", response_model=LancamentoRead)
+def editar_lancamento(lancamento_id: UUID, payload: LancamentoUpdate, db: Session = Depends(get_db)):
 
+    obj_alvo = db.get(LancamentoModel, lancamento_id)
 
-#--------------------------
-# PUT - Atualizar lançamento
-# Rota: PUT "/lancamentos/{id}"
-#--------------------------
-@roteador.put("/{id}", response_model=LancamentoRead)
-async def atualizar_lancamento(id: int, lancamento: LancamentoUpdate, db: Session = Depends(get_db)):
-    db_lancamento = db.query(Lancamento).filter(Lancamento.id == id).first()
-    if not db_lancamento:
-        raise HTTPException(status_code=404, detail="Lançamento não encontrado")
+    if not obj_alvo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Lançamento não encontrado")
     
-    db_lancamento.titulo = lancamento.titulo
-    db_lancamento.is_active = lancamento.is_active
-    
-    db.commit()
-    db.refresh(db_lancamento)
-    return db_lancamento
+    novos_dados = payload.model_dump(exclude_unset=True)
 
-
-#--------------------------
-# DELETE - Deletar lançamento
-# Rota: DELETE "/lancamentos/{id}"
-#--------------------------
-@roteador.delete("/{id}", status_code=204)
-async def deletar_lancamento(id: int, db: Session = Depends(get_db)):
-    lancamento = db.query(Lancamento).filter(Lancamento.id == id).first()
-    if not lancamento:
-        raise HTTPException(status_code=404, detail="Lançamento não encontrado")
+    for campo, valor in novos_dados.items():
+        setattr(obj_alvo, campo, valor)
     
-    db.delete(lancamento)
+    db.add(obj_alvo)
     db.commit()
-    return
-"""
+    db.refresh(obj_alvo)
+    return obj_alvo

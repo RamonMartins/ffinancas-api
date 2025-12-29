@@ -1,7 +1,7 @@
 # app/schemas/carteiras.py
 
 from uuid import UUID
-from pydantic import BaseModel, ConfigDict, StringConstraints, Field, field_serializer
+from pydantic import BaseModel, ConfigDict, StringConstraints, field_serializer
 from datetime import datetime
 from typing import Annotated
 from app.core.config import Brasil_TZ
