@@ -25,5 +25,5 @@ class LancamentoRead(BaseModel):
         return dt_brasil.isoformat()
 
 class LancamentoUpdate(BaseModel):
-    titulo: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
-    is_active: bool
+    titulo: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)] = None
+    is_active: bool| None = None
