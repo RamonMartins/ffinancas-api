@@ -78,3 +78,20 @@ async def editar_grupo(grupo_id: UUID, payload: GrupoFamiliarUpdate, db: AsyncSe
     await db.commit()
     await db.refresh(obj_alvo)
     return obj_alvo
+
+
+#--------------------------
+# DELETE - Remover Grupo Familiar
+# Rota: DELETE "/grupos-familiares/[id]"
+#--------------------------
+@roteador.delete("/{grupo_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def remover_grupo(grupo_id: UUID, db: AsyncSession = Depends(get_db)):
+
+    obj_alvo = await db.get(GrupoFamiliarModel, grupo_id)
+
+    if not obj_alvo:
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Grupo Familiar não encontrada")
+
+    await db.delete(obj_alvo)
+    await db.commit()
+    return None

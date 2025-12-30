@@ -78,3 +78,20 @@ async def editar_carteira(carteira_id: UUID, payload: CarteiraUpdate, db: AsyncS
     await db.commit()
     await db.refresh(obj_alvo)
     return obj_alvo
+
+
+#--------------------------
+# DELETE - Remover Carteira
+# Rota: DELETE "/carteiras/[id]"
+#--------------------------
+@roteador.delete("/{carteira_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def remover_carteira(carteira_id: UUID, db: AsyncSession = Depends(get_db)):
+
+    obj_alvo = await db.get(CarteiraModel, carteira_id)
+
+    if not obj_alvo:
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Carteira não encontrada")
+
+    await db.delete(obj_alvo)
+    await db.commit()
+    return None

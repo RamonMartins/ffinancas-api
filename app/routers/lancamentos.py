@@ -71,3 +71,20 @@ async def editar_lancamento(lancamento_id: UUID, payload: LancamentoUpdate, db: 
     await db.commit()
     await db.refresh(obj_alvo)
     return obj_alvo
+
+
+#--------------------------
+# DELETE - Remover Lançamento
+# Rota: DELETE "/lancamentos/[id]"
+#--------------------------
+@roteador.delete("/{lancamento_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def remover_lancamento(lancamento_id: UUID, db: AsyncSession = Depends(get_db)):
+
+    obj_alvo = await db.get(LancamentoModel, lancamento_id)
+
+    if not obj_alvo:
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Lançamento não encontrada")
+
+    await db.delete(obj_alvo)
+    await db.commit()
+    return None
