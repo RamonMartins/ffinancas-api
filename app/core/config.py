@@ -5,13 +5,20 @@ from zoneinfo import ZoneInfo
 class SettingsClass(BaseSettings):
     # O pydantic Settings lida automaticamente com a leitura do .env
 
-    # 1. Variável de Ambiente: Padrão é 'development' se a variável não estiver definida
+    # Variável do Ambiente (development, production, etc)
     ENVIRONMENT: str
     
-    # 2. Exemplo de Variável de Conexão com DB
+    # Variável de conexão à base de dados
     DATABASE_URL: str
 
-    #FRONT_URL: str
+    # Variável da Secret Auth - Assina o crachá de entrada (Login)
+    JWT_SECRET: str
+
+    # Variável da Secret Auth - Assina o pedido de nova senha
+    RESET_PASSWORD_SECRET: str
+
+    # Variável da Secret Auth - Assina o pedido de confirmação de dono do e-mail
+    VERIFICATION_TOKEN_SECRET: str
 
     # Define de onde carregar as variáveis (padrão do pydantic)
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
