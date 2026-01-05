@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .carteiras import CarteiraModel
+    from .usuarios import UsuarioModel
 
 
 class GrupoFamiliarModel(Base):
@@ -20,4 +21,5 @@ class GrupoFamiliarModel(Base):
     modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relacionamento Bidirecional
+    usuarios: Mapped[list["UsuarioModel"]] = relationship("UsuarioModel", back_populates="grupo_familiar")
     carteiras: Mapped[list["CarteiraModel"]] = relationship("CarteiraModel", back_populates="grupo_familiar", cascade="all, delete-orphan")

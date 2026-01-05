@@ -2,12 +2,13 @@
 
 from fastapi import APIRouter, HTTPException, status, Depends
 from app.database.session import get_db
-from app.database.models import GrupoFamiliarModel
+from app.database.models import GrupoFamiliarModel, UsuarioModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.grupos_familiares import *
 from app.utils.text_validator import verificar_duplicidade
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+from app.core.auth import current_user
 
 
 roteador = APIRouter(prefix="/grupos-familiares", tags=["Grupos Familiares"])
@@ -19,17 +20,33 @@ roteador = APIRouter(prefix="/grupos-familiares", tags=["Grupos Familiares"])
 @roteador.get("", response_model=list[GrupoFamiliarRead])
 async def todos_grupos(db: AsyncSession = Depends(get_db)):
 
-    stmt = select(GrupoFamiliarModel).options(selectinload(GrupoFamiliarModel.carteiras))
+    stmt = select(GrupoFamiliarModel)
     grupos = await db.execute(stmt)
     return grupos.scalars().all()
 
 
 #--------------------------
-# POST - Criar Grupo Familiar
+# POST - Cria Grupo Familiar e associa ao usuário atual
 # Rota: POST "/grupos-familiares"
 #--------------------------
 @roteador.post("", response_model=GrupoFamiliarRead, status_code=201)
-async def criar_grupo(payload: GrupoFamiliarCreate, db: AsyncSession = Depends(get_db)):
+async def criar_vincular_grupo(
+    payload: GrupoFamiliarCreate,
+    db: AsyncSession = Depends(get_db),
+    user: UsuarioModel = Depends(current_user)
+):
+    
+    if user.lider_familiar is False:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Apenas Líderes Familiares podem criar Grupos Familiares."
+        )
+
+    if user.grupo_id is not None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Usuário já pertence a um Grupo Familiar e não pode criar outro."
+        )
 
     await verificar_duplicidade(
         db,
@@ -41,10 +58,16 @@ async def criar_grupo(payload: GrupoFamiliarCreate, db: AsyncSession = Depends(g
 
     novo_grupo = GrupoFamiliarModel(**payload.model_dump())
     db.add(novo_grupo)
+
+    # Gera o ID do novo grupo mas não grava no banco ainda
+    await db.flush()
+
+    # Associa o usuário atual ao novo grupo
+    user.grupo_id = novo_grupo.id
+    
     await db.commit()
     stmt = (
         select(GrupoFamiliarModel)
-        .options(selectinload(GrupoFamiliarModel.carteiras))
         .where(GrupoFamiliarModel.id == novo_grupo.id)
     )
     resultado = await db.execute(stmt)
