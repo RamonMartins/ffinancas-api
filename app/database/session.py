@@ -41,8 +41,13 @@ AsyncSessionLocal = async_sessionmaker(
 # Se o banco estiver suspendido (Cold Start), esta lógica impede que a API falhe de imediato.
 @retry(
     stop=stop_after_attempt(8),      # Limita a no máximo 5 tentativas
-    wait=wait_fixed(2),              # Espera exatamente 3 segundos entre cada tentativa
-    retry=retry_if_exception_type(OperationalError), # Só tenta de novo se for erro de conexão/rede
+    wait=wait_fixed(3),              # Espera exatamente 3 segundos entre cada tentativa
+    retry=retry_if_exception_type((
+        OperationalError,  # Erro de operação do banco (offline/refused)
+        OSError,           # Erro de rede (host unreachable)
+        ConnectionError,   # Erro de conexão TCP
+        EOFError           # Conexão fechada prematuramente
+    )), # Só tenta de novo se for erro de conexão/rede
     reraise=True                     # Se esgotar as 5 tentativas, lança o erro final
 )
 async def get_db_session_with_retry():
