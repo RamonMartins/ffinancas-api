@@ -1,3 +1,5 @@
+# alembic/env.py
+
 import asyncio
 from logging.config import fileConfig
 
@@ -85,10 +87,29 @@ async def run_async_migrations() -> None:
         poolclass=pool.NullPool,
     )
 
-    async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations)
+    # Lógica de retry para Cold Start do Banco de Dados
+    attempts = 0
+    max_attempts = 10
+    retry_delay = 3  # segundos
 
-    await connectable.dispose()
+    while attempts < max_attempts:
+        try:
+            async with connectable.connect() as connection:
+                await connection.run_sync(do_run_migrations)
+            
+            await connectable.dispose()
+            return  # Sucesso! Sai da função.
+
+        except Exception as e:
+            attempts += 1
+            print(f"Tentativa {attempts}/{max_attempts}: Banco de dados ainda não disponível. Aguardando {retry_delay}s...")
+            
+            if attempts >= max_attempts:
+                print("Erro: Limite de tentativas de conexão esgotado para migrações.")
+                await connectable.dispose()
+                raise e
+            
+            await asyncio.sleep(retry_delay)
 
 
 def run_migrations_online() -> None:
