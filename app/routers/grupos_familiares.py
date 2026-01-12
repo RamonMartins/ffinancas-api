@@ -42,7 +42,7 @@ async def criar_vincular_grupo(
             detail="Apenas Líderes Familiares podem criar Grupos Familiares."
         )
 
-    if user.grupo_id is not None:
+    if user.grupo_familiar_id is not None:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Usuário já pertence a um Grupo Familiar e não pode criar outro."
@@ -53,7 +53,7 @@ async def criar_vincular_grupo(
         model=GrupoFamiliarModel,
         campo="titulo",
         valor=payload.titulo,
-        mensagem_erro=f"Já existe um Grupo familiar com o título '{payload.titulo}'"
+        mensagem_erro=f"Já existe um Grupo Familiar com o título '{payload.titulo}'"
     )
 
     novo_grupo = GrupoFamiliarModel(**payload.model_dump())
@@ -63,7 +63,7 @@ async def criar_vincular_grupo(
     await db.flush()
 
     # Associa o usuário atual ao novo grupo
-    user.grupo_id = novo_grupo.id
+    user.grupo_familiar_id = novo_grupo.id
     
     await db.commit()
     stmt = (
@@ -78,13 +78,13 @@ async def criar_vincular_grupo(
 # PATCH - Atualizar Grupo Familiar
 # Rota: PATCH "/grupos-familiares/[id]"
 #-------------------------- 
-@roteador.patch("/{grupo_id}", response_model=GrupoFamiliarRead)
-async def editar_grupo(grupo_id: UUID, payload: GrupoFamiliarUpdate, db: AsyncSession = Depends(get_db)):
+@roteador.patch("/{grupo_familiar_id}", response_model=GrupoFamiliarRead)
+async def editar_grupo(grupo_familiar_id: UUID, payload: GrupoFamiliarUpdate, db: AsyncSession = Depends(get_db)):
     
     stmt_busca = (
         select(GrupoFamiliarModel)
         .options(selectinload(GrupoFamiliarModel.carteiras))
-        .where(GrupoFamiliarModel.id == grupo_id)
+        .where(GrupoFamiliarModel.id == grupo_familiar_id)
     )
     resultado_busca = await db.execute(stmt_busca)
     obj_alvo = resultado_busca.scalar_one_or_none()
@@ -107,10 +107,10 @@ async def editar_grupo(grupo_id: UUID, payload: GrupoFamiliarUpdate, db: AsyncSe
 # DELETE - Remover Grupo Familiar
 # Rota: DELETE "/grupos-familiares/[id]"
 #--------------------------
-@roteador.delete("/{grupo_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def remover_grupo(grupo_id: UUID, db: AsyncSession = Depends(get_db)):
+@roteador.delete("/{grupo_familiar_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def remover_grupo(grupo_familiar_id: UUID, db: AsyncSession = Depends(get_db)):
 
-    obj_alvo = await db.get(GrupoFamiliarModel, grupo_id)
+    obj_alvo = await db.get(GrupoFamiliarModel, grupo_familiar_id)
 
     if not obj_alvo:
         raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Grupo Familiar não encontrada")

@@ -18,7 +18,7 @@ class UsuarioModel(SQLAlchemyBaseUserTableUUID, Base):
     # id(UUID), email(EmailStr), hashed_password, is_active(bool), is_superuser(bool), is_verified(bool)
     nome: Mapped[str] = mapped_column(nullable=False)
     lider_familiar: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    grupo_id: Mapped[UUID | None] = mapped_column(ForeignKey("grupos_familiares.id", ondelete="SET NULL"), nullable=True)
+    grupo_familiar_id: Mapped[UUID | None] = mapped_column(ForeignKey("grupos_familiares.id", ondelete="SET NULL"), nullable=True)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
