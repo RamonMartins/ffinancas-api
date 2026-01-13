@@ -55,3 +55,4 @@ fastapi_users = FastAPIUsers[UsuarioModel, UUID](
 
 # Atalho para proteger rotas: current_user
 current_user = fastapi_users.current_user(active=True)
+current_user_superuser = fastapi_users.current_user(active=True, superuser=True)
