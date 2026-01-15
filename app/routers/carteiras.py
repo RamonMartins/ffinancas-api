@@ -92,8 +92,10 @@ async def criar_carteira(
     db: AsyncSession = Depends(get_db),
     user: UsuarioModel = Depends(current_user)
 ):
-    if payload.grupo_familiar_id != user.grupo_familiar_id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você não tem permissão para criar uma carteira para este Grupo Familiar")
+    # Pega os dados do payload
+    dados = payload.model_dump()
+    # Insere o ID do Grupo Familiar do usuário Logado
+    dados["grupo_familiar_id"] = user.grupo_familiar_id
     
     # Verifica se tem duplicidade no banco de dados
     await verificar_duplicidade(
@@ -107,7 +109,7 @@ async def criar_carteira(
 
     # O model_dump pega o objeto payload com as propriedades e desempacota em formato JSON
     # Os asteriscos (**) serve para entregar ao constructor CarteiraModel as propriedades uma a uma
-    nova_carteira = CarteiraModel(**payload.model_dump())
+    nova_carteira = CarteiraModel(**dados)
     db.add(nova_carteira)
     await db.commit()
     # Refresh() é usado para atualizar o objeto do "novo_lancamento" com os dados mais recentes do banco de dados, incluindo o ID gerado automaticamente.
